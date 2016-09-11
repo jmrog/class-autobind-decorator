@@ -1,9 +1,10 @@
 {
   "name": "class-autobind-decorator",
   "version": "1.0.0",
-  "description": "A framework-agnostic utility for auto-binding \"class\" methods to instances that does not require ES2015 polyfills and that does not require (but is compatible with) \"legacy\" decorator syntax.",
-  "main": "index.js",
+  "description": "A tiny framework-agnostic utility for auto-binding \"class\" methods to instances using either \"legacy\" decorator syntax or plain old ES5 (without polyfills).",
+  "main": "src/index.js",
   "scripts": {
+    "build": "./node_modules/.bin/babel src -d lib",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -13,9 +14,15 @@
     "decorator",
     "prototype",
     "react",
+    "es5",
     "es6",
+    "es7",
     "es2015"
   ],
   "author": "Jason Rogers <jason@jmichaelrogers.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.14.0",
+    "babel-preset-es2015": "^6.14.0"
+  }
 }

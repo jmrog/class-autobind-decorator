@@ -5,9 +5,6 @@
  * `prototype` property) to the instances of the "class."
  *
  * @param {Object} [options] - optional options
- * @param {boolean} [options.enumerableOnly] - if truthy, the returned decorator auto-binds only the
- *  own enumerable methods of the "class" (i.e., the own enumerable methods of the relevant
- *  prototype); otherwise, it auto-binds all "own" methods, enumerable or not
  * @param {String[]} [options.methodsToIgnore] - names of methods to skip auto-binding
  * @returns {Function} autoBindMethodsDecorator
  */
@@ -29,17 +26,17 @@ export default function autoBindMethods(options = {}) {
         }
 
         const { prototype } = target;
-        const { methodsToIgnore = [], enumerableOnly } = options;
-        let ownProps = enumerableOnly ?
-            Object.keys(prototype) :
+        const { methodsToIgnore = [] } = options;
+        let ownProps = typeof Object.getOwnPropertySymbols === 'function' ?
+            Object.getOwnPropertyNames(prototype).concat(Object.getOwnPropertySymbols(prototype)) :
             Object.getOwnPropertyNames(prototype);
 
         if (methodsToIgnore.length > 0) {
             ownProps = ownProps.filter((prop) => methodsToIgnore.indexOf(prop) === -1);
         }
 
-        ownProps.forEach((ownPropName) => {
-            const propDescriptor = Object.getOwnPropertyDescriptor(prototype, ownPropName);
+        ownProps.forEach((ownPropIdentifier) => {
+            const propDescriptor = Object.getOwnPropertyDescriptor(prototype, ownPropIdentifier);
             const { value } = propDescriptor;
 
             if (typeof value !== 'function' || !propDescriptor.configurable) {
@@ -49,7 +46,7 @@ export default function autoBindMethods(options = {}) {
 
             let boundMethod;
 
-            Object.defineProperty(prototype, ownPropName, {
+            Object.defineProperty(prototype, ownPropIdentifier, {
                 get() {
                     if (!boundMethod) {
                         boundMethod = value.bind(this);

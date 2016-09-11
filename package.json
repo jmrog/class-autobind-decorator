@@ -1,0 +1,21 @@
+{
+  "name": "class-autobind-decorator",
+  "version": "1.0.0",
+  "description": "A framework-agnostic utility for auto-binding \"class\" methods to instances that does not require ES2015 polyfills and that does not require (but is compatible with) \"legacy\" decorator syntax.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "autobind",
+    "bind",
+    "class",
+    "decorator",
+    "prototype",
+    "react",
+    "es6",
+    "es2015"
+  ],
+  "author": "Jason Rogers <jason@jmichaelrogers.com>",
+  "license": "MIT"
+}

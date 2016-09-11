@@ -11,22 +11,25 @@ const symbolKey = Symbol('symbolKey');
  * @param {Function} MySecondClass
  * @param {Array.<string|Symbol>} [ignoredMethods]
  */
-function testBindings(MyFirstClass, MySecondClass, ignoredMethods = []) {
+function testBindings(MyFirstClass, MySecondClass, MyThirdClass, ignoredMethods = []) {
     const unboundInstance = new MyFirstClass();
     const boundInstance = new MySecondClass();
+    const boundConfiguredInstance = new MyThirdClass();
     const unboundTestMethodOne = unboundInstance.testMethodOne;
-    const unboundTestMethodTwo = unboundInstance.testMethodTwo;
     const unboundSymbolMethod = unboundInstance[symbolKey];
     const boundTestMethodOne = boundInstance.testMethodOne;
-    const boundTestMethodTwo = boundInstance.testMethodTwo;
     const boundSymbolMethod = boundInstance[symbolKey];
+    const boundConfiguredTestMethodOne = boundConfiguredInstance.testMethodOne;
+    const boundConfiguredTestMethodTwo = boundConfiguredInstance.testMethodTwo;
+    const boundConfiguredSymbolMethod = boundConfiguredInstance[symbolKey];
 
     expect(unboundTestMethodOne(unboundInstance)).to.equal(false);
-    expect(unboundTestMethodTwo(unboundInstance)).to.equal(false);
     expect(unboundSymbolMethod(unboundInstance)).to.equal(false);
-    expect(boundTestMethodOne(boundInstance)).to.equal(ignoredMethods.includes('testMethodOne') ? false : true);
-    expect(boundTestMethodTwo(boundInstance)).to.equal(ignoredMethods.includes('testMethodTwo') ? false : true);
-    expect(boundSymbolMethod(boundInstance)).to.equal(ignoredMethods.includes(symbolKey) ? false : true);
+    expect(boundTestMethodOne(boundInstance)).to.equal(true);
+    expect(boundSymbolMethod(boundInstance)).to.equal(true);
+    expect(boundConfiguredTestMethodOne(boundConfiguredInstance)).to.equal(ignoredMethods.includes('testMethodOne') ? false : true);
+    expect(boundConfiguredTestMethodTwo(boundConfiguredInstance)).to.equal(ignoredMethods.includes('testMethodTwo') ? false : true);
+    expect(boundConfiguredSymbolMethod(boundConfiguredInstance)).to.equal(ignoredMethods.includes(symbolKey) ? false : true);
 }
 
 function isBound(instance, context) {
@@ -39,7 +42,14 @@ function getClasses(autoBindOptions) {
             return isBound(instance, this);
         }
 
-        testMethodTwo(instance) {
+        [symbolKey](instance) {
+            return isBound(instance, this);
+        }
+    }
+
+    @autoBindMethods
+    class MySecondClass {
+        testMethodOne(instance) {
             return isBound(instance, this);
         }
 
@@ -49,7 +59,7 @@ function getClasses(autoBindOptions) {
     }
 
     @autoBindMethods(autoBindOptions)
-    class MySecondClass {
+    class MyThirdClass {
         testMethodOne(instance) {
             return isBound(instance, this);
         }
@@ -63,7 +73,7 @@ function getClasses(autoBindOptions) {
         }
     }
 
-    return { MyFirstClass, MySecondClass };
+    return [MyFirstClass, MySecondClass, MyThirdClass];
 }
 
 // Sanity check.
@@ -79,8 +89,7 @@ describe('autoBindMethods', function () {
 describe('autoBindMethodsDecorator', function () {
     describe('when returned from a call that specifies no options', function () {
         it('should autobind all methods', function () {
-            const { MyFirstClass, MySecondClass } = getClasses();
-            testBindings(MyFirstClass, MySecondClass);
+            testBindings(...getClasses());
         });
     });
 
@@ -90,8 +99,7 @@ describe('autoBindMethodsDecorator', function () {
                 const autoBindOptions = {
                     methodsToIgnore: ['testMethodOne', symbolKey]
                 };
-                const { MyFirstClass, MySecondClass } = getClasses(autoBindOptions);
-                testBindings(MyFirstClass, MySecondClass, autoBindOptions.methodsToIgnore);
+                testBindings(...getClasses(autoBindOptions), autoBindOptions.methodsToIgnore);
             });
         });
     });

@@ -11,7 +11,7 @@
  * @param {String[]} [options.methodsToIgnore] - names of methods to skip auto-binding
  * @returns {Function} autoBindMethodsDecorator
  */
-export function autoBindMethods(options = {}) {
+export default function autoBindMethods(options = {}) {
 
     /**
      * A "legacy"-style "class" decorator function for auto-binding the methods of the "class."

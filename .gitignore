@@ -1,5 +1,4 @@
 *.un~
 .idea/
 node_modules/
-lib/
 

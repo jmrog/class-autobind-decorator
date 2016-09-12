@@ -1,6 +1,6 @@
 {
   "name": "class-autobind-decorator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A small framework-agnostic utility for auto-binding \"class\" methods to instances (with customization options) using either \"legacy\" decorator syntax or plain old ES5 (without needing ES2015+ polyfills).",
   "main": "build/index.js",
   "scripts": {

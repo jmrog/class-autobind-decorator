@@ -37,7 +37,7 @@ object that can define an array of methods not to bind (using the method
 names or Symbol keys; see the use of `methodsToIgnore` in the examples
 below, as well as the test cases in the tests).
 
-1. ES6-style as a "legacy" class decorator, without options:
+ES6-style as a "legacy" class decorator, without options:
 
 ```js
 import autoBindMethods from 'class-autobind-decorator';
@@ -53,7 +53,7 @@ const smReference = new Foo().someMethod;
 console.log(smReference()); // => `true`
 ```
 
-2. ES6-style as a "legacy" class decorator, with options:
+ES6-style as a "legacy" class decorator, with options:
 
 ```js
 import autoBindMethods from 'class-autobind-decorator';
@@ -81,7 +81,7 @@ class MyComponent extends React.Component {
 }
 ```
 
-3. ES5-style, without options:
+ES5-style, without options:
 
 ```js
 var autoBindMethods = require('class-autobind-decorator').default;
@@ -99,7 +99,7 @@ var smReference = new Foo().someMethod;
 console.log(smReference()); // => `true`
 ```
 
-4. ES5-style, with options:
+ES5-style, with options:
 
 ```js
 var autoBindMethods = require('class-autobind-decorator').default;

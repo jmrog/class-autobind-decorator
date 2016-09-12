@@ -1,6 +1,6 @@
 # class-autobind-decorator
 
-A small, customizable, framework-agnostic, ES5-compatible "class"-level
+A small, customizable, framework-agnostic, ES5-compatible class-level
 decorator for automatically binding "class" methods -- i.e., methods on
 a constructor's `prototype` object -- to instances, so that `this`
 refers to the relevant instance within those methods.
@@ -34,8 +34,8 @@ Note that this is currently only usable as a "class"-level (or, in ES5
 terms, a constructor-function-level) decorator. It can't currently be
 used on individual methods. However, the decorator accepts an options
 object that can define an array of methods not to bind (using the method
-names or Symbol keys) not to bind (see the use of `methodsToIgnore` in
-the examples below, as well as the test cases in the tests).
+names or Symbol keys; see the use of `methodsToIgnore` in the examples
+below, as well as the test cases in the tests).
 
 1. ES6-style as a "legacy" class decorator, without options:
 

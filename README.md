@@ -2,24 +2,25 @@
 
 A small, customizable, framework-agnostic, ES5-compatible "class"-level
 decorator for automatically binding "class" methods -- i.e., methods on
-the constructor's `prototype` object -- to instances, so that `this`
+a constructor's `prototype` object -- to instances, so that `this`
 refers to the relevant instance within those methods.
 
 ## Features:
 
-- Usable with ES6 React classes, but also elsewhere
+- Usable with ES6 [React](https://facebook.github.io/react/) classes,
+but also elsewhere
 - Built version is fully ES5-compatible, requiring no ES6+ polyfills
-- Supports class methods with ES6 Symbols as keys
-- Accepts passed-in options, allowing the user to specify the methods
-that should or should not be bound (supporting both named methods and
-methods with Symbols as keys in this case, as well)
+- Supports class methods that have ES6 Symbols as keys
+- Accepts passed-in options (see examples below), allowing the user to
+specify the methods that should or should not be bound (supporting both
+named methods and methods with Symbols as keys in this case, as well)
 - Does not attempt to redefine methods marked as non-configurable
-(checks for configurability first)
-- Conforms to the ES6+ "legacy" decorator pattern, and hence is usable
-as an ES6+ legacy decorator
-- Usable as both a "bare" decorator (`@autoBindMethods`) or as a
-configured decorator (`@autoBindMethods(options)`)
-- Extensively documented and tested (I hope)
+(actually checks for configurability first!)
+- Conforms to [the ES6+ "legacy" decorator pattern](https://babeljs.io/docs/plugins/transform-decorators/),
+and hence is usable as an ES6+ legacy decorator
+- Usable as both a "bare," unconfigured decorator (`@autoBindMethods`)
+or as a configured decorator (`@autoBindMethods(options)`)
+- Extensively documented and tested
 
 ## Installation
 
@@ -30,9 +31,13 @@ npm install --save class-autobind-decorator
 ## Usage
 
 Note that this is currently only usable as a "class"-level (or, in ES5
-terms, a constructor-function-level) decorator.
+terms, a constructor-function-level) decorator. It can't currently be
+used on individual methods. However, the decorator accepts an options
+object that can define an array of methods not to bind (using the method
+names or Symbol keys) not to bind (see the use of `methodsToIgnore` in
+the examples below, as well as the test cases in the tests).
 
-ES6-style as a "legacy" class decorator, without options:
+1. ES6-style as a "legacy" class decorator, without options:
 
 ```js
 import autoBindMethods from 'class-autobind-decorator';
@@ -48,7 +53,7 @@ const smReference = new Foo().someMethod;
 console.log(smReference()); // => `true`
 ```
 
-ES6-style as a "legacy" class decorator, with options:
+2. ES6-style as a "legacy" class decorator, with options:
 
 ```js
 import autoBindMethods from 'class-autobind-decorator';
@@ -76,7 +81,7 @@ class MyComponent extends React.Component {
 }
 ```
 
-ES5-style, without options:
+3. ES5-style, without options:
 
 ```js
 var autoBindMethods = require('class-autobind-decorator').default;
@@ -94,7 +99,7 @@ var smReference = new Foo().someMethod;
 console.log(smReference()); // => `true`
 ```
 
-ES5-style, with options:
+4. ES5-style, with options:
 
 ```js
 var autoBindMethods = require('class-autobind-decorator').default;
@@ -121,7 +126,7 @@ console.log(fmReference()); // => `true`
 console.log(smReference()); // => `false`, due to passed in options
 ```
 
-## Building (for ES5 compatibility)
+## Building
 
 Clone the repository, then, in the main (top-level) repo directory:
 
@@ -129,7 +134,7 @@ Clone the repository, then, in the main (top-level) repo directory:
 npm run build
 ```
 
-Compiled code is placed in the `./build` directory. You can also
+Compiled code will be placed in the `./build` directory. You can also
 download it directly from this repository.
 
 ## Running Tests
@@ -145,15 +150,16 @@ Tests are specified in the `./tests` directory, and use `mocha` and
 `chai`. Running the tests also requires a few extra `babel` dependencies
 specified in `package.json`.
 
-## Why Write Yet Another Auto-Bind Decorator?
+## Wait... Why did you write yet another auto-bind decorator?
 
-Well, I'm not currently aware of another project that has all of the
+Well, I'm not currently aware of another project that has *all* of the
 features mentioned in the "Features" section, above (the ones I *am*
 aware of either hard-code React-specific stuff, or don't check whether
 properties are configurable before trying to redefine them, or can't be
 used as both "bare" (unconfigured) decorators and configured decorators,
-and so on). I also just wanted an opportunity to work more directly with
-decorators, so I used it as a learning experience.
+and things like that -- no hate, though). I also just wanted an
+opportunity to work more directly with decorators, so I used it as a
+learning experience.
 
 ## License
 

@@ -86,7 +86,12 @@ describe('autoBindMethods', function () {
     });
 });
 
+// Main tests.
 describe('autoBindMethodsDecorator', function () {
+    const autoBindOptions = {
+        methodsToIgnore: ['testMethodOne', symbolKey]
+    };
+
     describe('when returned from a call that specifies no options', function () {
         it('should autobind all methods', function () {
             testBindings(...getClasses());
@@ -96,11 +101,29 @@ describe('autoBindMethodsDecorator', function () {
     describe('when returned from a call that specifies options', function () {
         describe('when the options specify methods to ignore', function () {
             it('should bind only the unignored methods', function () {
-                const autoBindOptions = {
-                    methodsToIgnore: ['testMethodOne', symbolKey]
-                };
                 testBindings(...getClasses(autoBindOptions), autoBindOptions.methodsToIgnore);
             });
+        });
+    });
+
+    describe('when passed a "class" with methods that are not configurable', function () {
+        it('should skip binding those functions and not throw', function () {
+            const [MyFirstClass] = getClasses();
+
+            Object.defineProperty(MyFirstClass.prototype, 'nonConfigurable', {
+                value: function (instance) {
+                    return instance === this;
+                },
+                configurable: false
+            });
+
+            expect(autoBindMethods(MyFirstClass)).not.to.throw;
+
+            const myInstance = new MyFirstClass();
+            const { testMethodOne, nonConfigurable } = myInstance;
+
+            expect(testMethodOne(myInstance)).to.equal(true);
+            expect(nonConfigurable(myInstance)).to.equal(false);
         });
     });
 });

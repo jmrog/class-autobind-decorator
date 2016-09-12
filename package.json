@@ -2,7 +2,7 @@
   "name": "class-autobind-decorator",
   "version": "1.0.0",
   "description": "A small framework-agnostic utility for auto-binding \"class\" methods to instances (with customization options) using either \"legacy\" decorator syntax or plain old ES5 (without needing ES2015+ polyfills).",
-  "main": "src/index.js",
+  "main": "build/index.js",
   "scripts": {
     "build": "./node_modules/.bin/babel src -d build",
     "test": "npm run build && ./node_modules/.bin/mocha --compilers js:babel-core/register -- test"

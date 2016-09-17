@@ -21,6 +21,11 @@
   ],
   "author": "Jason Rogers <jason@jmichaelrogers.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jmrog/class-autobind-decorator.git"
+  },
+  "bugs": "https://github.com/jmrog/class-autobind-decorator/issues",
   "devDependencies": {
     "babel-cli": "^6.14.0",
     "babel-core": "^6.14.0",

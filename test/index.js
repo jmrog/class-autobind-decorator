@@ -126,4 +126,16 @@ describe('autoBindMethodsDecorator', function () {
             expect(nonConfigurable(myInstance)).to.equal(false);
         });
     });
+
+    describe('when a method is accessed by something other than the instance', function () {
+        it('should not bind the method, but should only bind when access *is* by the instance', function () {
+            const [ , MySecondClass, ] = getClasses();
+
+            const myInstance = new MySecondClass();
+            myInstance.__proto__.testMethodOne; // similarly, should not bind
+            const { testMethodOne } = myInstance;
+
+            expect(testMethodOne(myInstance)).to.equal(true); // should be bound to the instance now, not the prototype
+        });
+    });
 });

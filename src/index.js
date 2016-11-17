@@ -66,6 +66,14 @@ function autoBindMethodsDecorator(target, options = {}) {
         Object.defineProperty(prototype, ownPropIdentifier, {
             get() {
                 if (!boundMethod) {
+                    if (!(this instanceof target)) {
+                        // We don't want to bind to something that isn't an instance of the constructor in the rare
+                        // case where the property is read by some means other than an instance *before* it has been
+                        // bound (e.g., if something checks whether the method exists via the prototype, as in
+                        // `someConstructor.prototype.someProp`), so we just return the unbound method in that case.
+                        return value;
+                    }
+
                     boundMethod = value.bind(this);
                 }
 

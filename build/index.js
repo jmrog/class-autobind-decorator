@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 exports.default = autoBindMethods;
 /**
@@ -44,15 +44,15 @@ function autoBindMethods(input) {
  * @param {String[]} [options.methodsToIgnore] - names of methods to skip auto-binding
  */
 function autoBindMethodsDecorator(target) {
-    var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
     if (typeof target !== 'function') {
         throw new TypeError('The autoBindMethods decorator must be passed a function as the first argument. ' + ('It received an argument of type ' + (typeof target === 'undefined' ? 'undefined' : _typeof(target)) + '.'));
     }
 
     var prototype = target.prototype;
-    var _options$methodsToIgn = options.methodsToIgnore;
-    var methodsToIgnore = _options$methodsToIgn === undefined ? [] : _options$methodsToIgn;
+    var _options$methodsToIgn = options.methodsToIgnore,
+        methodsToIgnore = _options$methodsToIgn === undefined ? [] : _options$methodsToIgn;
 
     var ownProps = typeof Object.getOwnPropertySymbols === 'function' ? Object.getOwnPropertyNames(prototype).concat(Object.getOwnPropertySymbols(prototype)) : Object.getOwnPropertyNames(prototype);
 
@@ -77,6 +77,14 @@ function autoBindMethodsDecorator(target) {
         Object.defineProperty(prototype, ownPropIdentifier, {
             get: function get() {
                 if (!boundMethod) {
+                    if (!(this instanceof target)) {
+                        // We don't want to bind to something that isn't an instance of the constructor in the rare
+                        // case where the property is read by some means other than an instance *before* it has been
+                        // bound (e.g., if something checks whether the method exists via the prototype, as in
+                        // `someConstructor.prototype.someProp`), so we just return the unbound method in that case.
+                        return value;
+                    }
+
                     boundMethod = value.bind(this);
                 }
 

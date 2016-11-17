@@ -7,15 +7,17 @@ refers to the relevant instance within those methods.
 
 ## Features:
 
-- Usable with ES6 [React](https://facebook.github.io/react/) classes,
+- Usable with ES6+ [React](https://facebook.github.io/react/) and [Preact](https://preactjs.com) classes,
 but also elsewhere
 - Built version is fully ES5-compatible, requiring no ES6+ polyfills
 - Supports class methods that have ES6 Symbols as keys
-- Accepts passed-in options (see examples below), allowing the user to
+- Accepts configuration options (see examples below), allowing the user to
 specify the methods that should or should not be bound (supporting both
 named methods and methods with Symbols as keys in this case, as well)
 - Does not attempt to redefine methods marked as non-configurable
-(actually checks for configurability first!)
+(checks for configurability first!), and only binds methods to actual
+instances, even if the method is first accessed via some other object (e.g.,
+via the prototype)
 - Conforms to [the ES6+ "legacy" decorator pattern](https://babeljs.io/docs/plugins/transform-decorators/),
 and hence is usable as an ES6+ legacy decorator
 - Usable as both a "bare," unconfigured decorator (`@autoBindMethods`)
@@ -128,14 +130,15 @@ console.log(smReference()); // => `false`, due to passed in options
 
 ## Building
 
-Clone the repository, then, in the main (top-level) repo directory:
+Clone the repository, run `npm install`, then, in the main (top-level) repo
+directory:
 
 ```js
 npm run build
 ```
 
 Compiled code will be placed in the `./build` directory. You can also
-download it directly from this repository.
+download compiled code directly from this repository.
 
 ## Running Tests
 
@@ -155,11 +158,12 @@ specified in `package.json`.
 Well, I'm not currently aware of another project that has *all* of the
 features mentioned in the "Features" section, above (the ones I *am*
 aware of either hard-code React-specific stuff, or don't check whether
-properties are configurable before trying to redefine them, or can't be
-used as both "bare" (unconfigured) decorators and configured decorators,
-and things like that -- no hate, though). I also just wanted an
+properties are configurable before trying to redefine them, or inadvertently
+bind to non-instance objects when methods are accessed first via the prototype,
+or can't be used as both "bare" (unconfigured) decorators and configured
+decorators, and things like that -- no hate, though!). I also just wanted an
 opportunity to work more directly with decorators, so I used it as a
-learning experience.
+learning experience. :)
 
 ## License
 

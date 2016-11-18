@@ -13,16 +13,15 @@ but also elsewhere
 - Supports class methods that have ES6 Symbols as keys
 - Accepts configuration options (see examples below), allowing the user to
 specify the methods that should or should not be bound (supporting both
-named methods and methods with Symbols as keys in this case, as well)
+named methods and methods with Symbols as keys in this case, as well), and
+to specify whether or not to perform certain optimizations
 - Does not attempt to redefine methods marked as non-configurable
-(checks for configurability first!), and only binds methods to actual
-instances, even if the method is first accessed via some other object (e.g.,
-via the prototype)
+(checks for configurability first!)
 - Conforms to [the ES6+ "legacy" decorator pattern](https://babeljs.io/docs/plugins/transform-decorators/),
 and hence is usable as an ES6+ legacy decorator
 - Usable as both a "bare," unconfigured decorator (`@autoBindMethods`)
 or as a configured decorator (`@autoBindMethods(options)`)
-- Extensively documented and tested
+- Documented and tested
 
 ## Installation
 
@@ -127,6 +126,15 @@ var smReference = fooInstance.secondMethod;
 console.log(fmReference()); // => `true`
 console.log(smReference()); // => `false`, due to passed in options
 ```
+
+## Configuration Options
+
+**methodsToIgnore**: An array of method names that should not be bound if found on the prototype.
+See the above examples for usage.
+
+**dontOptimize**: The default behavior of this decorator is to only bind methods to instances once,
+and, from that point onward, to store the bound method on the instance itself. You can override
+this behavior by setting `dontOptimize` to true.
 
 ## Building
 

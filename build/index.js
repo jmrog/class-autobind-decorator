@@ -23,6 +23,9 @@ exports.default = autoBindMethods;
  *
  * @param {Object} [options] - optional options
  * @param {String[]} [options.methodsToIgnore] - names of methods to skip auto-binding
+ * @param {boolean} [options.dontOptimize] - if truthy, turns off the decorator's default
+ *  optimization behavior, which is to define the bound method directly on the class instance
+ *  in order to prevent lookups and re-binding on every access
  * @returns {*}
  */
 function autoBindMethods(input) {
@@ -41,7 +44,10 @@ function autoBindMethods(input) {
  * @param {Function} target - an ES2015 "class" or -- what is effectively the same thing -- a
  *  constructor function.
  * @param {Object} [options] - optional options
- * @param {String[]} [options.methodsToIgnore] - names of methods to skip auto-binding
+ * @param {string[]} [options.methodsToIgnore] - names of methods to skip auto-binding
+ * @param {boolean} [options.dontOptimize] - if truthy, turns off the decorator's default
+ *  optimization behavior, which is to define the bound method directly on the class instance
+ *  in order to prevent lookups and re-binding on every access
  */
 function autoBindMethodsDecorator(target) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -52,7 +58,10 @@ function autoBindMethodsDecorator(target) {
 
     var prototype = target.prototype;
     var _options$methodsToIgn = options.methodsToIgnore,
-        methodsToIgnore = _options$methodsToIgn === undefined ? [] : _options$methodsToIgn;
+        methodsToIgnore = _options$methodsToIgn === undefined ? [] : _options$methodsToIgn,
+        _options$dontOptimize = options.dontOptimize,
+        dontOptimize = _options$dontOptimize === undefined ? false : _options$dontOptimize;
+
 
     var ownProps = typeof Object.getOwnPropertySymbols === 'function' ? Object.getOwnPropertyNames(prototype).concat(Object.getOwnPropertySymbols(prototype)) : Object.getOwnPropertyNames(prototype);
 
@@ -64,28 +73,34 @@ function autoBindMethodsDecorator(target) {
 
     ownProps.forEach(function (ownPropIdentifier) {
         var propDescriptor = Object.getOwnPropertyDescriptor(prototype, ownPropIdentifier);
-        var value = propDescriptor.value;
+        var value = propDescriptor.value,
+            configurable = propDescriptor.configurable;
 
 
-        if (typeof value !== 'function' || !propDescriptor.configurable) {
+        if (typeof value !== 'function' || !configurable) {
             // We can only do our work with configurable functions, so bail early here.
             return;
         }
 
-        var boundMethod = void 0;
-
         Object.defineProperty(prototype, ownPropIdentifier, {
             get: function get() {
-                if (!boundMethod) {
-                    if (!(this instanceof target)) {
-                        // We don't want to bind to something that isn't an instance of the constructor in the rare
-                        // case where the property is read by some means other than an instance *before* it has been
-                        // bound (e.g., if something checks whether the method exists via the prototype, as in
-                        // `someConstructor.prototype.someProp`), so we just return the unbound method in that case.
-                        return value;
-                    }
+                if (this.hasOwnProperty(ownPropIdentifier)) {
+                    // Don't bind the prototype's method to the prototype, or we can't re-bind it.
+                    return value;
+                }
 
-                    boundMethod = value.bind(this);
+                var boundMethod = value.bind(this);
+
+                if (!dontOptimize) {
+                    var _configurable = propDescriptor.configurable,
+                        writable = propDescriptor.writable;
+
+
+                    Object.defineProperty(this, ownPropIdentifier, {
+                        value: boundMethod,
+                        configurable: _configurable,
+                        writable: writable
+                    });
                 }
 
                 return boundMethod;

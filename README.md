@@ -134,7 +134,9 @@ See the above examples for usage.
 
 **dontOptimize**: The default behavior of this decorator is to only bind methods to instances once,
 and, from that point onward, to store the bound method on the instance itself. You can override
-this behavior by setting `dontOptimize` to true.
+this behavior by setting `dontOptimize` to true. If you do that, the method will be re-bound to the
+instance on every access; a bound version of the method will not be stored on the instance itself
+(so, a use case for this might be if you need the instance not to be modified at all).
 
 ## Building
 

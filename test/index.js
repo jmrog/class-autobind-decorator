@@ -104,6 +104,33 @@ describe('autoBindMethodsDecorator', function () {
                 testBindings(...getClasses(autoBindOptions), autoBindOptions.methodsToIgnore);
             });
         });
+
+        describe('when the options specify dontOptimize', function () {
+            it('should not alter the instance and should re-bind on every access', function () {
+                const [MyFirstClass] = getClasses();
+                const customAutoBinder = autoBindMethods({ dontOptimize: true });
+
+                customAutoBinder(MyFirstClass);
+                const myFirstInstance = new MyFirstClass();
+
+                const a = myFirstInstance.testMethodOne;
+                const b = myFirstInstance.testMethodOne;
+                expect(a).not.to.equal(b);
+                expect(myFirstInstance.hasOwnProperty('testMethodOne')).to.equal(false);
+            });
+        });
+
+        describe('when the options do not specify dontOptimize', function () {
+            it('should alter the instance and not re-bind on every access', function () {
+                const [, MySecondClass] = getClasses();
+                const myFirstInstance = new MySecondClass();
+
+                const a = myFirstInstance.testMethodOne;
+                const b = myFirstInstance.testMethodOne;
+                expect(a).to.equal(b);
+                expect(myFirstInstance.hasOwnProperty('testMethodOne')).to.equal(true);
+            })
+        })
     });
 
     describe('when passed a "class" with methods that are not configurable', function () {
@@ -127,15 +154,33 @@ describe('autoBindMethodsDecorator', function () {
         });
     });
 
-    describe('when a method is accessed by something other than the instance', function () {
-        it('should not bind the method, but should only bind when access *is* by the instance', function () {
-            const [ , MySecondClass, ] = getClasses();
+    describe('when a method is accessed via the prototype', function () {
+        it('should not bind the method to the prototype', function () {
+            const [ , MySecondClass] = getClasses();
+            MySecondClass.prototype.testMethodOne; // `get` via prototype, not instance, should not bind
 
             const myInstance = new MySecondClass();
             myInstance.__proto__.testMethodOne; // similarly, should not bind
             const { testMethodOne } = myInstance;
 
             expect(testMethodOne(myInstance)).to.equal(true); // should be bound to the instance now, not the prototype
+        });
+    });
+
+    describe('when applied to a class that has multiple instances', function () {
+        it('should bind the method to each individual instance', function () {
+            const [ , MySecondClass] = getClasses();
+            const myFirstInstance = new MySecondClass();
+            const mySecondInstance = new MySecondClass();
+
+            let { testMethodOne } = myFirstInstance;
+
+            expect(testMethodOne(myFirstInstance)).to.equal(true);
+            expect(testMethodOne(mySecondInstance)).to.equal(false);
+            
+            testMethodOne = mySecondInstance.testMethodOne;
+
+            expect(testMethodOne(mySecondInstance)).to.equal(true);
         });
     });
 });

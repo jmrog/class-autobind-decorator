@@ -117,6 +117,7 @@ describe('autoBindMethodsDecorator', function () {
                 const b = myFirstInstance.testMethodOne;
                 expect(a).not.to.equal(b);
                 expect(myFirstInstance.hasOwnProperty('testMethodOne')).to.equal(false);
+                expect(b(myFirstInstance)).to.equal(true);
             });
         });
 
@@ -129,8 +130,8 @@ describe('autoBindMethodsDecorator', function () {
                 const b = myFirstInstance.testMethodOne;
                 expect(a).to.equal(b);
                 expect(myFirstInstance.hasOwnProperty('testMethodOne')).to.equal(true);
-            })
-        })
+            });
+        });
     });
 
     describe('when passed a "class" with methods that are not configurable', function () {
@@ -177,10 +178,14 @@ describe('autoBindMethodsDecorator', function () {
 
             expect(testMethodOne(myFirstInstance)).to.equal(true);
             expect(testMethodOne(mySecondInstance)).to.equal(false);
+            expect(myFirstInstance.hasOwnProperty('testMethodOne')).to.equal(true);
+            expect(MySecondClass.prototype.hasOwnProperty('testMethodOne')).to.equal(true);
+            expect(mySecondInstance.hasOwnProperty('testMethodOne')).to.equal(false);
             
             testMethodOne = mySecondInstance.testMethodOne;
 
             expect(testMethodOne(mySecondInstance)).to.equal(true);
+            expect(mySecondInstance.hasOwnProperty('testMethodOne')).to.equal(true);
         });
     });
 });

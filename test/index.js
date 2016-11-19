@@ -36,6 +36,10 @@ function isBound(instance, context) {
     return instance === context;
 }
 
+/**
+ * Retrieves three classes for testing -- one unbound, one auto-bound, and one
+ * auto-bound-with-options (some methods ignored).
+ */
 function getClasses(autoBindOptions) {
     class MyFirstClass {
         testMethodOne(instance) {

@@ -92,14 +92,19 @@ function autoBindMethodsDecorator(target) {
                 var boundMethod = value.bind(this);
 
                 if (!dontOptimize) {
-                    var _configurable = propDescriptor.configurable,
-                        writable = propDescriptor.writable;
+                    var writable = propDescriptor.writable,
+                        enumerable = propDescriptor.enumerable; // use same values as prototype for consistency
 
+                    // `defineProperty` must be used here rather than a standard assignment because
+                    // assignments will first check for getters/setters up the prototype chain and
+                    // thus reject the assignment (since the property on the prototype has a getter
+                    // but no setter (see: http://www.2ality.com/2012/08/property-definition-assignment.html))
 
                     Object.defineProperty(this, ownPropIdentifier, {
                         value: boundMethod,
-                        configurable: _configurable,
-                        writable: writable
+                        configurable: true,
+                        writable: writable,
+                        enumerable: enumerable
                     });
                 }
 

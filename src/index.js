@@ -78,7 +78,7 @@ function autoBindMethodsDecorator(target, options = {}) {
                 const boundMethod = value.bind(this);
 
                 if (!dontOptimize) {
-                    const { writable } = propDescriptor; // use same value as prototype for consistency
+                    const { writable, enumerable } = propDescriptor; // use same values as prototype for consistency
 
                     // `defineProperty` must be used here rather than a standard assignment because
                     // assignments will first check for getters/setters up the prototype chain and
@@ -87,7 +87,8 @@ function autoBindMethodsDecorator(target, options = {}) {
                     Object.defineProperty(this, ownPropIdentifier, {
                         value: boundMethod,
                         configurable: true,
-                        writable
+                        writable,
+                        enumerable
                     });
                 }
 

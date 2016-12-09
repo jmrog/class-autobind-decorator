@@ -3,8 +3,9 @@
   "version": "2.1.0",
   "description": "A small framework-agnostic utility for auto-binding \"class\" methods to instances (with customization options) using either \"legacy\" decorator syntax or plain old ES5 (without needing ES2015+ polyfills).",
   "main": "build/index.js",
+  "types": "build/index.d.ts",
   "scripts": {
-    "build": "./node_modules/.bin/babel src -d build",
+    "build": "./node_modules/.bin/babel src -d build && cp ./src/index.d.ts ./build",
     "test": "npm run build && ./node_modules/.bin/mocha --compilers js:babel-core/register -- test"
   },
   "keywords": [

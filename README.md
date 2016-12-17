@@ -22,6 +22,7 @@ and hence is usable as an ES6+ legacy decorator
 - Usable as both a "bare," unconfigured decorator (`@autoBindMethods`)
 or as a configured decorator (`@autoBindMethods(options)`)
 - Documented and tested
+- Includes TypeScript declarations for use with TypeScript
 
 ## Installation
 
@@ -171,10 +172,11 @@ aware of either hard-code React-specific stuff, or don't check whether
 properties are configurable before trying to redefine them, or inadvertently
 bind to non-instance objects when methods are accessed first via the prototype,
 or can't be used as both "bare" (unconfigured) decorators and configured
-decorators, and things like that -- no hate, though!). I also just wanted an
-opportunity to work more directly with decorators, so I used it as a
-learning experience. :)
+decorators, or don't have TypeScript declarations, and things like that -- no
+hate, though!). I also just wanted an opportunity to work more directly with
+decorators, so I used it as a learning experience. :)
 
 ## License
 
 [MIT](https://opensource.org/licenses/MIT)
+

@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## v2.2.0 (12/17/2016)
+
+- Add TypeScript declaration file (closes #1)
+- Make newly-defined property have same enumerability as property being
+  overridden
+- Add additional tests and comments
+
 ## v2.1.0 (11/18/2016)
 
 - Add optimizations (add methods to instances and unnecessary re-binding)

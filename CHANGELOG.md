@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v2.2.1 (1/27/2017)
+
+- Remove .babelrc from npm package for React Native use (closes #3)
+
 ## v2.2.0 (12/17/2016)
 
 - Add TypeScript declaration file (closes #1)

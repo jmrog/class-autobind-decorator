@@ -1,0 +1,5 @@
+*.un~
+.idea/
+.vscode/
+.babelrc
+

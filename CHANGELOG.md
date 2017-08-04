@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v2.3.0 (8/4/2017)
+
+- Improve typings (and types exposed for consumption)
+
 ## v2.2.1 (1/27/2017)
 
 - Remove .babelrc from npm package for React Native use (closes #3)

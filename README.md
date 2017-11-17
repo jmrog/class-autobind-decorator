@@ -8,7 +8,8 @@ refers to the relevant instance within those methods.
 ## Features:
 
 - Usable with ES6+ [React](https://facebook.github.io/react/) and [Preact](https://preactjs.com) classes,
-but also elsewhere
+but also elsewhere (exports a default `autoBindMethods` decorator, as well as an `autoBindMethodsForReact`
+convenience decorator that skips autobinding methods from the React Component Spec that do not require binding)
 - Built version is fully ES5-compatible, requiring no ES6+ polyfills
 - Supports class methods that have ES6 Symbols as keys
 - Accepts configuration options (see examples below), allowing the user to
@@ -17,6 +18,9 @@ named methods and methods with Symbols as keys in this case, as well), and
 to specify whether or not to perform certain optimizations
 - Does not attempt to redefine methods marked as non-configurable
 (checks for configurability first!)
+- Keeps property descriptors (e.g., writability, enumerability, etc.) consistent between original
+properties and the corresponding autobound properties
+- Does not "magically" autobind properties set on classes/prototypes *after* the decorator has been applied
 - Conforms to [the ES6+ "legacy" decorator pattern](https://babeljs.io/docs/plugins/transform-decorators/),
 and hence is usable as an ES6+ legacy decorator
 - Usable as both a "bare," unconfigured decorator (`@autoBindMethods`)
@@ -59,8 +63,12 @@ ES6-style as a "legacy" class decorator, with options:
 
 ```js
 import autoBindMethods from 'class-autobind-decorator';
+// NOTE: For React classes, you can use this alternative:
+// import { autoBindMethodsForReact } from 'class-autobind-decorator';
 
 @autoBindMethods({ methodsToIgnore: ['unboundMethod', 'render'] })
+// or:
+// @autoBindMethodsForReact({ methodsToIgnore: ['unboundMethod'] })
 class MyComponent extends React.Component {
     someComponentMethod() {
         // Do something with `this` here. If the React `onClick`

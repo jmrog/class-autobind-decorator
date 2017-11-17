@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## v3.0.0 (11/16/2017)
+
+- Ensures that the decorator does not prevent overwriting autobound
+  methods on a class/prototype (closes #4), for React 16 interop
+- Exports `autoBindMethodsForReact` convenience decorator for easier use
+  with React/Preact classes (see #4)
+- Does not attempt to autoBind the `constructor` method, ever (no need)
+- Better guarantees that property descriptors for autobound properties
+  have the same settings with respect to enumerability, writability, etc.
+- Built files are now UMD modules
+- Additional tests
+
 ## v2.3.0 (8/4/2017)
 
 - Improve typings (and types exposed for consumption)

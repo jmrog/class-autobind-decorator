@@ -6,7 +6,7 @@
   "types": "build/index.d.ts",
   "scripts": {
     "build": "rm -rf ./build && ./node_modules/.bin/babel src -d build && cp ./src/index.d.ts ./build",
-    "test": "npm run build && ./node_modules/.bin/mocha --compilers js:babel-core/register -- test"
+    "test": "./node_modules/.bin/mocha --compilers js:babel-core/register -- test"
   },
   "keywords": [
     "autobind",

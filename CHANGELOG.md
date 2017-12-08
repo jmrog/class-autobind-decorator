@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v3.0.1 (12/7/2017)
+
+- Fix type declarations
+
 ## v3.0.0 (11/16/2017)
 
 - Ensures that the decorator does not prevent overwriting autobound

@@ -1,25 +1,15 @@
-declare namespace autoBindMethodsFactory {
-    // All types exported to make things easier for consumers of this decorator.
-    export type ConstructorFunction<T> = {
-        new(...args: any[]): T;
-    };
+export type ConstructorFunction<T> = {
+    new(...args: any[]): T;
+};
 
-    export interface InputOptions {
-        methodsToIgnore?: Array<string>;
-        dontOptimize?: boolean
-    }
-
-    export interface autoBindMethodsDecorator<T> {
-        (constructor: ConstructorFunction<T>, options?: InputOptions): void;
-    }
+export interface InputOptions {
+    methodsToIgnore?: Array<string>;
+    dontOptimize?: boolean
 }
 
-declare function autoBindMethodsFactory<T>(
-    input: autoBindMethodsFactory.ConstructorFunction<T>
-): void;
+export function autoBindMethods<T = any>(target: ConstructorFunction<T>): void;
+export function autoBindMethods<T = any>(input?: InputOptions): (target: ConstructorFunction<T>) => void;
+export function autoBindMethodsForReact<T = any>(target: ConstructorFunction<T>): void;
+export function autoBindMethodsForReact<T = any>(input?: InputOptions): (target: ConstructorFunction<T>) => void;
 
-declare function autoBindMethodsFactory<T>(
-    input?: autoBindMethodsFactory.InputOptions
-): autoBindMethodsFactory.autoBindMethodsDecorator<T>;
-
-export default autoBindMethodsFactory;
+export default autoBindMethods;
